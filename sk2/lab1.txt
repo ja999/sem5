@@ -1,0 +1,15 @@
+netstat -autpn
+
+client:
+  protokol: tcp
+  ip: 150.254.32.165
+  port: 1234
+
+socket:
+  domena: PF_INET
+  tryb: SOCK_STREAM, SOCK_DGRAM
+  protokol: 0
+
+inet_addr(const char *cp); - zamineia ip na reprezentacje sieciowa
+
+lab-net-27.cs.put.poznan.pl
