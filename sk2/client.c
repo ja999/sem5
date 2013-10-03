@@ -22,14 +22,14 @@ int main(){
   struct hostent *host;
   char buffer[256];
   
-  host = gethostbyname("google.pl");
-  // printf("ip: %d\n", host->h_addr);
+  host = gethostbyname("lab-net-10");
+  //telnet  printf("ip: %d\n", host->h_addr);
   int fd = socket(PF_INET, SOCK_STREAM, 0);
   if(fd){
     sa.sin_family = PF_INET;
-    sa.sin_port = htons(1234);
+    sa.sin_port = htons(13);
     // sa.sin_addr.s_addr = host->h_addr;
-    bcopy((char *) host->h_addr, (char *)&sa.sin_addr.s_addr, 32);
+    bcopy((char *) host->h_addr, (char *)&sa.sin_addr.s_addr, 4);
 
     int c = connect(fd, (struct sockaddr*) &sa, sizeof(struct sockaddr_in));
 
