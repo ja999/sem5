@@ -6,29 +6,30 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-//struct in_addr{
+// in order not to forget :)
+// struct in_addr{
 //  u_long s_addr; // 32-bitowy adres
-//}
+// }
 
-//struct sockaddr_in{
+// struct sockaddr_in{
 //  u_short sin_family; // PF_INET - zawsze
 //  u_short sin_port; // numer porstu
 //  struct in_addr sin_addr; // adres wezla
 //  char sin_zero[8]; // pomijamy
-//}
+// }
 
 int main(){
   struct sockaddr_in sa;
   struct hostent *host;
   char buffer[256];
-  
+
   host = gethostbyname("lab-net-10");
-  //telnet  printf("ip: %d\n", host->h_addr);
+
   int fd = socket(PF_INET, SOCK_STREAM, 0);
   if(fd){
     sa.sin_family = PF_INET;
     sa.sin_port = htons(13);
-    // sa.sin_addr.s_addr = host->h_addr;
+
     bcopy((char *) host->h_addr, (char *)&sa.sin_addr.s_addr, 4);
 
     int c = connect(fd, (struct sockaddr*) &sa, sizeof(struct sockaddr_in));
