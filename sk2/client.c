@@ -22,15 +22,17 @@ int main(){
   struct sockaddr_in sa;
   struct hostent *host;
   char buffer[256];
-
-  host = gethostbyname("lab-net-10");
+  host = gethostbyname("siema");
 
   int fd = socket(PF_INET, SOCK_STREAM, 0);
+
   if(fd){
     sa.sin_family = PF_INET;
     sa.sin_port = htons(13);
 
-    bcopy((char *) host->h_addr, (char *)&sa.sin_addr.s_addr, 4);
+    // bcopy((char *) host->h_addr, (char *)&sa.sin_addr.s_addr, 4);
+    bcopy((char *)host->h_addr,(char *)&sa.sin_addr.s_addr,host->h_length);
+    printf("blalblalblalbl\n");
 
     int c = connect(fd, (struct sockaddr*) &sa, sizeof(struct sockaddr_in));
 
