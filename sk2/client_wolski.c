@@ -32,7 +32,7 @@ int main(int agrc, char *argv[]) {
   if(socketfd) {
     int c = connect(socketfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
     bzero(buffer, 256);
-    strcat(buffer, "inf106525");
+    strcat(buffer, "106525");
     int w = write(socketfd, buffer, 255);
     bzero(buffer, 256);
     int i = read(socketfd, buffer, 255);
