@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
-
+#include <signal.h>
 
 int main(int agrc, char *argv[]) {
   int socketfd = socket(PF_INET, SOCK_STREAM, 0);
