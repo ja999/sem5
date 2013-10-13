@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import matplotlib.pyplot as plt
-import numpy
+import numpy as np
 import csv
 import glob
 from scipy import randn
@@ -29,7 +29,7 @@ class Chart:
         if a[0] != "generation":
           r = self.get_point(a)
           self.pops.append(r[0])
-          self.gs.append(r[1])
+          self.gs.append(r[1] / 1000)
           self.vals.append(r[2])
       ret = [self.pops, self.gs, self.vals]
       return ret
@@ -48,15 +48,24 @@ class ReadControl:
     return tab
 
 def main():
-  plt.axis([0, 500000, 0.6, 1])
+  fig = plt.figure(figsize=(6.7, 6.7))
+  ax = fig.add_subplot(111)
+  ax2 = ax.twiny()
+  ax.set_xlim([0, 500])
+  ax2.set_xlim([0, 200])
+  ax.set_ylim([0.6, 1.0])
+  plt.grid()
   for a in glob.glob("*.csv"):
     tab = ReadControl().openo(a)
     all_points = Chart().get_all(tab)
     b = a.replace(".csv", "", 1)
-    plt.plot(all_points[1], all_points[2], label = b)
-  plt.legend(loc = 4)
-  plt.xlabel("Rozegranych gier")
+    ax.plot(all_points[1], all_points[2], label = b)
+  ax.legend(loc = 4)
+  ax.set_xlabel("Rozegranych gier (x1000)")
+  ax2.set_xlabel("Pokolenie")
   plt.ylabel("Odsetek wygranych gier")
+
+
   plt.savefig("a.pdf")
   # plt.show()
   plt.close()
