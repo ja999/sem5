@@ -35,10 +35,13 @@ class Chart:
       return ret
     except:
       0
+  def get_last_row(self, tab):
+    last = tab[-1]
+    del last[0:2]
+    last = [float(x) * 100 for x in last]
+    return last
 
 class ReadControl:
-  def __init__(self):
-    0
   def openo(self, siema):
     tab = []
     with open(siema, "rb") as readfile:
@@ -48,28 +51,46 @@ class ReadControl:
     return tab
 
 def main():
-  fig = plt.figure(figsize=(6.7, 6.7))
-  ax = fig.add_subplot(111)
+  chart = Chart()
+  fig = plt.figure(figsize=(13.4, 6.7))
+  ax = fig.add_subplot(121)
   ax2 = ax.twiny()
   ax.set_xlim([0, 500])
   ax2.set_xlim([0, 200])
   ax.set_ylim([0.6, 1.0])
+  ax2.set_xticks(range(0, 201, 40))
   plt.grid()
-  for a in glob.glob("*.csv"):
+  markers = ['o', 'd', 'v', 's', 'D']
+  boxy = []
+  names = []
+  for i, a in enumerate(glob.glob("*.csv")):
     tab = ReadControl().openo(a)
-    all_points = Chart().get_all(tab)
+    all_points = chart.get_all(tab)
+    last_row = chart.get_last_row(tab)
+    boxy.append(last_row)
     b = a.replace(".csv", "", 1)
-    ax.plot(all_points[1], all_points[2], label = b)
+    names.append(b)
+    artist = ax.plot(all_points[1], all_points[2], marker = markers[i], label = b)
+    artist[0].set_markevery(25)
   ax.legend(loc = 4)
   ax.set_xlabel("Rozegranych gier (x1000)")
   ax2.set_xlabel("Pokolenie")
   plt.ylabel("Odsetek wygranych gier")
 
+  ax3 = fig.add_subplot(122)
+  ax3.grid()
+  plt.xticks(range(1, 6), names, rotation = 45)
+  ax3.yaxis.tick_right()
+  ax3.set_ylim([60, 100])
+  avgs = []
+  boxy.reverse()
+  for i in boxy:
+    avgs.append(sum(i) / len(i))
+  ax3.boxplot(boxy, 1)
+  ax3.scatter([1, 2, 3, 4, 5], avgs)
 
   plt.savefig("a.pdf")
-  # plt.show()
   plt.close()
-
 
 if __name__ == "__main__":
   main()
