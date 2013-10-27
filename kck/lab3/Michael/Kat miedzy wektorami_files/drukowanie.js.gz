@@ -1,0 +1,389 @@
+var strony = new Array();
+var ile = 0;
+var xmlhttp, ajax;
+var zielony = "#c0e69e";
+var niebieski = "#bcd1ef";
+var kolortla = "#f8f3e6";
+var rootUrl;
+var kliknietoDrukuj = false;
+function poczatek(){
+
+    ustawRootUrl();
+    var url = document.location.toString();
+    if (url.indexOf("www")>=0){
+	rootUrl = "http://www.matematyka.pisz.pl/";
+    }
+
+    /*try{
+	infoOciastkach(url);
+    }catch(e){}*/
+
+    sprawdzDwd();
+
+    try{
+	var s = ["ja","sz.p","tema","ku","b@","ma","tyk","a.pi","l"];
+	id("madr").innerHTML = s[0] + s[3] + s[4] + s[5] + s[2] + s[6] + s[7] + s[1] + s[8];
+    }catch(e){};
+
+    /* try{
+	id("mkrk").innerHTML = '<a class="c" href="http://loca-korepetycje.pl">Korepetycje w Poznaniu</a>';
+    }catch(e){}; */
+
+
+    if (url.search(/strona\/serwer.html/) > 0) oplatyZaSerwer();
+    if (url.search(/strona\/\d+\.html/) == -1) return 0;
+
+    var strona = url.match(/strona\/(\d+)\.html/)[1];
+
+    elitmat();
+
+    //vstrony  - strony z komentarzem video
+    jestVideo = false;
+    for (var nr in vstrony){
+	if (strona == nr){
+	    jestVideo = true;
+	    var idv = nr;
+	    break;
+	}
+    }
+    if (jestVideo){
+	if (rootUrl.indexOf("localhost") != -1){
+	    var jakubHtml = '<div id="komentarzVideo" onclick="pokarzVideo(\'' + idv + '\')">' + 
+		'<div style="margin-top:55px"> </div><b>Jakub</b><br><b>gada</b></div>';
+	}else{
+	    var jakubHtml = '<div id="komentarzVideo" onclick="pokarzVideo(\'' + idv + '\')">' + 
+		'<img id="jakub" src="../jaVideo.png"><b>Jakub</b><br><b>gada</b></div>';
+	}
+    }else{
+	var jakubHtml = '';
+    }
+
+    id("buttonyDrukowania").innerHTML = jakubHtml +
+	'<div id="drukdodaj">'+
+	'<div id="druklicznik"></div>'+
+	'dodaj<br>'+
+	'do<br>'+
+	'wydruku'+
+	'</div>'+
+	'<div id="drukkosz">'+
+	'<div id="drukkoszimg"><img src="../kosz.png"></div>'+
+	'wyczyść'+
+	'</div>'+
+	'<div id="drukpdf">'+
+	'<div id="drukpdfimg"><img src="../pdf.png"></div>'+
+	'utwórz<br>'+
+	'wydruk'+
+	'</div>'+
+	'<div id="drukJednaStrona">Tylko <u>jedną</u> stronę chcesz wydrukować?<br>Możesz przeglądać dalej i dodawać inne strony. Na końcu wydrukujesz wszystko z jednego pliku.</div>';
+
+    if (jakubHtml == ''){
+	id('drukdodaj').style.top = '468px';
+	id('drukkosz').style.top = '570px';
+	id('drukpdf').style.top = '630px';	
+    }
+
+    var ciastko = znajdzCiastko("strony");
+
+    if ( ciastko != 'brak'){ //jezeli sa dodane strony
+	strony = ciastko.split(".");
+	ile = strony.length;
+	if (czyTaStronaJestJuzDodana(strona)){ //jezeli true
+	    wygladGdyStronaJestDodana();
+	}else{
+	    wygladGdyStronaNieJestDodanaAleInneSa();
+	}
+    }else{
+	id("druklicznik").innerHTML = '<img src="../printer.png">';
+    }
+
+    id("drukdodaj").onclick = function(){ dodajTaStrone(strona); };
+
+    var takTylkoJedna = false;
+    id("drukpdf").onclick = function(){
+
+	if (kliknietoDrukuj){ //jakby ktoś cofnął po drukowaniu, to ma ile=0, ale wciaz sie pokazuje ikona drukpdf
+	    window.location.reload();
+	    return true;
+	}
+
+	if ((ile == 1) && (takTylkoJedna == false)){
+	    id("drukJednaStrona").style.display = "block";
+	    takTylkoJedna = true;
+	    return true;
+	}
+
+	if (id("drukJednaStrona").style.display == "block") id("drukJednaStrona").style.display = "none";
+
+	kliknietoDrukuj = true;
+
+	//drukuje
+	document.location = rootUrl+"drukowanie.py" 
+    };
+
+}
+function infoOciastkach(url){
+    if (znajdzCiastko('ciastka') != 'jestInfo'){
+	var diw = document.createElement('div');
+	diw.innerHTML = 'Strona matematyka.pisz.pl używa ciastek w celach statystycznych i reklamowych. Nadużywanie ciastek może prowadzić do otyłości, chorób serca i cukrzycy. Możesz tego uniknąć zmieniając ustawienia przeglądarki. Kliknij by zjeść kolejne ciastko i pozbyć się tego okienka.';
+	diw.style.padding = '10px';
+	diw.style.marginTop = '5px';
+	diw.style.width = '768px';
+	//diw.style.backgroundColor = '#f8f3e6';
+	diw.style.backgroundColor = '#e9cb8f';
+	diw.style.border = '1px solid #6b675b';
+	diw.style.cursor = 'pointer';
+	diw.onclick = function(){
+	    upieczCiacho('ciastka', 'jestInfo');
+	    diw.style.display = 'none';
+	}
+
+	if ((url == rootUrl) || (url == rootUrl+'index.html')){
+	    id('prostokat').style.marginBottom = '0px';
+	    diw.style.marginLeft = 'auto';
+	    diw.style.marginRight = 'auto';
+	    diw.style.marginBottom = '150px';
+	    diw.style.font = 'normal 13px verdana';
+	    diw.style.textAlign = 'left';
+	    diw.style.width = '880px';
+	    document.body.appendChild(diw)
+	}else{
+	    id('poprawej').appendChild(diw);
+	}
+	
+    }
+    
+}
+
+function sprawdzDwd(){
+    var dwd = znajdzCiastko('dwd');
+    //alert(document.cookie);
+    if (dwd == 'brak'){
+	try{
+	    var xmlhttp = makexmlhttp();
+	    xmlhttp.open('GET', rootUrl + 'forum/forum.py', true);
+	    xmlhttp.onreadystatechange = null;
+	    xmlhttp.send(null);
+
+	}catch (e){}
+    }
+}
+function ustawRootUrl(){
+    var url = document.location.toString();
+    if ( url.indexOf("localhost") > 0 ){
+	rootUrl = "http://localhost/matma/";
+    }else if( url.indexOf("192") > 0){
+	rootUrl = "http://192.168.0.1/matma/";
+    }else{
+	rootUrl = "http://matematyka.pisz.pl/";
+    }
+}
+function id(co){
+    return document.getElementById(co);
+}
+function znajdzCiastko(co){
+    var ciacho = document.cookie;
+
+    var p = ciacho.indexOf(co+'=');
+    if (p>=0){
+	var wycinek = ciacho.substring(p,ciacho.length);
+	var p = wycinek.indexOf('=') + 1; //poczatek zawartosci dla np. ustawienia="...zawartosc .."
+	var k = wycinek.indexOf(';');     //koniec
+	if (k<0) k = wycinek.length;
+	var wartosc = wycinek.substring(p,k);
+	return wartosc;
+
+    }else{
+	return 'brak';
+    }
+}
+function upieczCiacho(nazwa,zawartosc){
+    var data = new Date(2090,11,10,19,30,30);
+    document.cookie = nazwa+"="+escape(zawartosc)+"; expires="+data.toGMTString()+"; path=/";
+}
+function killCiacho(){
+    var data = new Date(2000,11,10,19,30,30);
+    var ciacho = document.cookie;
+    if ((ciacho.indexOf('strony=') >= 0)) document.cookie = "strony=; expires="+data.toGMTString()+"; path=/";
+}
+function czyTaStronaJestJuzDodana(strona){
+    for(var n=0; n<ile; n++){
+	if (strony[n] == strona) return true;
+    }
+    return false;
+}
+function wygladGdyStronaJestDodana(){
+    id("drukdodaj").style.backgroundColor = zielony;
+    //podczas cofania wyskakuje stara wartosc "ile", warto ja przynajmniej tak aktualizowac
+    id("drukdodaj").onmouseover = function(){  id("druklicznik").innerHTML = ile; aktualizujIleNaPodstawieCiastka();} 
+    id("drukdodaj").onmouseout = null;
+    id("druklicznik").innerHTML = ile;
+    id("drukkosz").style.display = "block";
+    id("drukkosz").onclick = wyczysc;
+    id("drukpdf").style.display = "block";
+}
+function wygladGdyStronaNieJestDodanaAleInneSa(){
+    id("drukdodaj").style.backgroundColor = kolortla;
+    id("drukdodaj").onmouseover = function(){
+	this.style.backgroundColor = niebieski;
+	aktualizujIleNaPodstawieCiastka();
+    };
+    id("drukdodaj").onmouseout = function(){ this.style.backgroundColor = kolortla; };
+    id("druklicznik").innerHTML = ile;
+    id("drukkosz").style.display = "block";
+    id("drukkosz").onclick = wyczysc;
+    id("drukpdf").style.display = "block";
+}
+function dodajTaStrone(strona){
+    if (czyTaStronaJestJuzDodana(strona)){
+	alert("Ta strona jest już dodana do wydrukowania!");
+	return 0;
+    }
+    strony[ile] = strona;
+    ile++;
+
+    for(n=0; n<ile; n++){
+	if (n == 0){
+	    var dociacha = strony[n];
+	}else{
+	    dociacha += "."+strony[n];
+	}
+    }
+    upieczCiacho("strony",dociacha);
+    wygladGdyStronaJestDodana();
+}
+function wyczysc(){
+    strony = new Array();
+    ile = 0;
+    killCiacho();
+    id("drukdodaj").style.backgroundColor = kolortla;
+    id("drukdodaj").onmouseover = function(){ this.style.backgroundColor = niebieski; };
+    id("drukdodaj").onmouseout = function(){ this.style.backgroundColor = kolortla; };
+
+    id("druklicznik").innerHTML = '<img src="../printer.png">';
+    id("drukkosz").style.display = "none";
+    id("drukpdf").style.display = "none";
+    id("drukpdf").onclick = function(){ document.location = rootUrl+"drukowanie.html" }; //gdyby bylo utworzPdf
+}
+function aktualizujIleNaPodstawieCiastka(){
+    var ciastko = znajdzCiastko("strony");
+    if (ciastko != 'brak'){
+	ile = ciastko.split(".").length;
+	id("druklicznik").innerHTML = ile;
+    }
+}
+function makexmlhttp(){
+    var xmlhttp = false;
+    if (window.XMLHttpRequest){
+	xmlhttp = new XMLHttpRequest();
+    }else{
+	try{
+	    xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+	}catch(e){
+	    try{
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	    }catch (e){
+		xmlhttp = false;
+	    }
+	}
+    }
+    return xmlhttp;
+}
+function wyslij(s){
+    var xmlhttp = makexmlhttp();
+    if (xmlhttp){
+	xmlhttp.open('GET', rootUrl + '?s='+s, true);
+	xmlhttp.onreadystatechange = null;
+	xmlhttp.send(null);
+    }
+}
+function dajLosowe() {
+    tekst = '';
+    var literki = "abcdefghijklmnopqrstuvwxyz0123456789";
+    for(var n=0; n<6; n++){
+	//losuje znak
+	var liczba = Math.floor(  Math.random() * 36 ) ;
+	var litera = literki.charAt(liczba);
+	tekst += litera;
+    }
+    return tekst;
+}
+function statystyka(){
+	try{
+	    var skad = document.referrer.toString();
+	    var url = document.location.toString();
+
+	    if (url.search(/strona\/\d+\.html/) > 0){
+		var nrStrony = url.match(/strona\/(\d+)\.html/)[1];
+
+		var s = znajdzCiastko('s');
+		if (s == 'brak'){
+		    s = dajLosowe();
+		    upieczCiacho('s', s);
+		}
+		if ( (skad.indexOf('http://matematyka.pisz.pl') == 0) || 
+		     (skad.indexOf('http://www.matematyka.pisz.pl') == 0) ){
+		    wyslij(nrStrony + '.1.' + s)
+		}else{
+		    wyslij(nrStrony + '.0.' + s)
+		}
+	    wyslij(s);
+	}
+    }catch (e){}
+
+}
+var linkL;
+function elitmat(){
+    try{
+	var url = document.location.toString();
+	if (url.search(/strona\/\d+\.html/) > 0){
+
+	    id('elitmat').onclick = function(){
+		linkL = id('elitmatL').href;
+		id('elitmatL').href = 'javascript:void(0)';
+		
+		xmlhttp = makexmlhttp();
+		if (xmlhttp){
+		    xmlhttp.open('GET', rootUrl + 'elitmat.py?co=klik', true);
+		    xmlhttp.onreadystatechange = null;
+		    xmlhttp.send(null);
+		}
+		
+		setTimeout("id('elitmatL').href = linkL; document.location = linkL;", 350);
+		
+	    }
+	}
+    }catch (e){}
+
+}
+function pokarzVideo(idv){
+    id('poprawejVideo').style.display = 'block';
+    id('komentarzVideo').style.visibility = 'hidden';
+    id('poprawejVideo').innerHTML = 
+	'<img id="krzyzyk" style="margin-left:768px; margin-top:4px; cursor:pointer;" src="../krzyzyk.png"><br>\
+         <iframe width="740" height="555" style="margin-left:15px; margin-top:5px;" \
+          src="http://www.youtube.com/embed/' + vstrony[idv] + '" \
+          frameborder="0" allowfullscreen>\
+         </iframe>'
+    id('krzyzyk').onclick = function(){ 
+	id("poprawejVideo").style.display = "none"; 
+	id('poprawejVideo').innerHTML = "";
+	id('komentarzVideo').style.visibility = 'visible';
+    }
+}
+function oplatyZaSerwer(){
+    try{
+	var s = ["rzek", "kub", "Grz", "Ja", " ", "ego"];
+	id("imieNazwisko").innerHTML = s[3] + s[1] + s[4] + s[2] + s[5] + s[0];
+	var s = ["00","11","32","20","44","40","04","37","02","39","27","98"," "];
+	id("konto").innerHTML = s[4] + s[12] + s[1] + s[5] + s[12] + s[3] + s[6] + s[12] + s[0] +
+	    s[0] + s[12] + s[7] + s[8] + s[12] + s[2] + s[9] + s[12] + s[10] + s[11];
+	var s = ["ja","sz.p","tema","ku","b@","ma","tyk","a.pi","l"];
+	id("adr").innerHTML = s[0] + s[3] + s[4] + s[5] + s[2] + s[6] + s[7] + s[1] + s[8];
+    }catch (e){}
+
+}
+vstrony = {"818":"l0y_fyB6LM0", "0":"ckW9pZyd-0I", "347":"uP9KfOH-wdE", "340":"QTzjyT4a0zM", "341":"7gG31EusiN8", "810":"e8m9GKqqt04", "813":"8Z-IQqyww80", "348":"yTduWk8hPnw", "815":"xpubOqWgv8Q", "817":"xfVPSmQc5RI", "719":"PAFYcbLSPhE", "718":"6qvVtV0Du7o", "717":"NQrilK3yHf0", "716":"i7Y4KWM1pYo", "715":"Y_LZWcTiGjY", "714":"upY-8DTeqrg", "917":"30dcOKDBnt4", "299":"Tokl_F-5z4o", "296":"nkhk7bEvJ38", "297":"VupnDI2Mwhs", "294":"eiWBETGlTLM", "295":"DFaui1iGn6c", "292":"hd0bWSuGhas", "290":"viHJAJixOpE", "291":"V5RPz8_MHh0", "590":"IEwq-ht-5KE", "593":"FNx3AjEsj5c", "592":"1Brr3ma8PsY", "595":"09CIHiMAxv8", "594":"JTFkHOB-0jU", "597":"vfxtglou3rg", "596":"ai1X0VEpl2k", "599":"DWlp_3oJF0s", "598":"R0Z3Erqh0jI", "197":"2MYFFm29r8M", "192":"iAgD7f98Xtc", "270":"D_e1cRUSam8", "271":"0dlMaFRdmoo", "272":"3QOteuD-E7w", "273":"Ca-ixACBAug", "274":"8ImlxTnfshw", "275":"nP2QF2aCxYM", "276":"o3o6-2glLOw", "277":"OPiuDC2IkbU", "278":"PaFP_CRbutQ", "279":"l9-EXProhZs", "305":"HznHTfmHpYA", "2989":"GhUvy-MO3hM", "2988":"FI-S_KR1H8M", "2983":"YlfV972ucb8", "2982":"HGhESPTqzXQ", "2981":"9ROjxAgBRKo", "2980":"TzslcAlNwg4", "2987":"Rb8psZsK23g", "2986":"h7YSdpTVO2Y", "2985":"h69x9gEuZTc", "2984":"wIF5d9-C4Cg", "449":"Mx3n_YxRYdU", "448":"lmkqKwGPtHw", "443":"oELG9d7NvBk", "442":"kZPwoHgJPzU", "441":"kI3p80-S1Fw", "440":"w-e9vwHeGww", "447":"hr6o_pAIpN0", "446":"ImML9LvEB5c", "445":"YmVLSEAhiYc", "444":"sl8D_Bceopk", "102":"1ZMj1zBN6Gc", "103":"hUEXQjf_sIY", "100":"eaAkSF9N0Eg", "101":"DME-zrZM6Lo", "106":"urenOdgUweg", "107":"1u6dLjlWzes", "104":"xmpiNzjc1jk", "105":"PMuT4B77wTk", "902":"6vaUTgC-Z30", "694":"-B6UFkXZi30", "32":"Uc6Gemr-x3c", "30":"oK5I7td7QP4", "35":"qoKPjh3JVPQ", "34":"4nc6hOxB8C0", "438":"FzgQFWiIs0w", "439":"skwBtVqv90A", "436":"5Ea2A14e9E4", "437":"ShlL9TfLQ1w", "434":"GvSVgs5l_p4", "435":"-YujMYsY1pU", "432":"I0VKzsA_6ww", "433":"bmoxwFW3D1A", "2617":"xbw2wUcTyOY", "2616":"EGPvy3IcWOE", "2615":"2gW2zUSkles", "2614":"GXlJvmxu-iE", "339":"p0rPG5kELQA", "338":"x11d7D9YC8Y", "2611":"INRt2i_8xnU", "2610":"KFTdeoWYGjk", "335":"NXXIXJTU9mY", "334":"5pkgObStJuo", "337":"GcWa5eg7zy8", "336":"bGNoqEyyXw8", "331":"_uX4nvFjbp8", "333":"zcqQn9N6jGY", "332":"hBBlpnw31Ck", "698":"6W21oltILBA", "89":"k7jtcdQk2XQ", "854":"2HUZz4-k2WI", "855":"GDyV9RXeuQo", "856":"69bv2MpYPkc", "857":"DZ55nIvvSYo", "156":"tGsZCcMY5qI", "345":"sxME5Mzh6NI", "858":"mFlt_r5l7Uc", "859":"0SshaX56mYE", "99":"ab_--F6eF94", "98":"c98SAgZG01U", "91":"mspLVz0fGNM", "90":"yp4ulyBsfeM", "93":"dHVy9k6Kkeo", "95":"5PjBIq2TqWY", "97":"jGQ8vqh4iVI", "96":"Taf8Z7MLuy8", "349":"V_Ij0DDkdHg", "153":"1wutJ7Wr49A", "740":"NGXmCRvR9L4", "741":"kBcnZD0gB4U", "742":"ZyuwFkWv1UA", "743":"FsD9z8_MvME", "744":"oz4YMq3V5h0", "745":"iprEsPZSEHY", "746":"d73F9kUmiNQ", "747":"gOSsD1FFCXs", "238":"VsYQBH6pqXo", "234":"V0UcuMLBgwE", "235":"YnQ1Dqy6fk0", "236":"4Lf83c2hYC8", "237":"BQ-S5gUmhJ8", "230":"uAkTLeicJgc", "231":"AWD2geKC4RQ", "232":"565dNkXOWD8", "233":"zecyWPI5SGc", "155":"E7feZ-9my1E", "146":"XzC4LMiKFMo", "147":"SVzhQHO93QU", "145":"tNfoBT2PagU", "142":"SRZ4vXEQR_M", "143":"dYu3kdP6jHA", "140":"ZulBsiGa9ME", "141":"BmBZFJF8NeM", "563":"6NYkkdcaVl0", "148":"tRnq0FzlsNc", "149":"PSbQJGCkvms", "154":"7-MCyJBiuSU", "194":"zTVD1GzcnnA", "948":"8QogFE8MMHo", "949":"hT3hF5feSKo", "946":"Jp5VB0ZiLLg", "947":"O2LGNv_kKBw", "944":"Gov4GNe5b1w", "942":"V0IltNQzTMw", "943":"V2IrF6atb1c", "940":"Kl5nwGKt1Hk", "2967":"eykBOQcmKks", "685":"m0c9miZH5Ns", "684":"GMM74ETy1Sc", "687":"ER7zllVcCMg", "686":"vKsrxoBznlk", "680":"319PWEm0ats", "683":"Icwri1V8Jds", "682":"lzw6RmQsl8o", "819":"9LSxf6Wg4Qg", "133":"v2iqc00ICtg", "132":"NyY8ifMzc0E", "131":"YMmOZJHXBQo", "130":"YEMYEJVIe5E", "498":"Q4M7QugoOHo", "136":"UiPeRSJOjvU", "135":"2vUw8fECh3s", "134":"zobwPNBtdNg", "494":"FZa4fvve9Ew", "495":"eBPZuXDfh1s", "496":"1QDGZwbYEj0", "497":"vRP9q8ukGg8", "491":"nJjIpPTjF8s", "493":"FRwLN87Z4_M", "24":"dYYUOeEoiT4", "25":"RxsH2oiyaaQ", "26":"R6aWbhPPlH4", "27":"c4v4prrQFRI", "21":"gdjjMuQ6UPw", "22":"FJMDrajtW2k", "407":"tYKEKGxSE-Y", "2407":"YLF3W8stVRg", "939":"fPpP9cOpfQU", "404":"mFZ0HAOfLIk", "403":"2P-pXcFjqnk", "402":"_dZ3xN3lgiY", "933":"fA9HnqQ6jQM", "931":"_TeQeHOX1jM", "937":"SlCfDvSA8fM", "2010":"nOeDZpUlLM4", "2408":"rfPvUlV3tDU", "934":"q9sorrcaOqI", "2598":"pti50O4VUDE", "2503":"g3KM4ruKtJ4", "2963":"GyQgxymHFr8", "3240":"2ldJq6Y_Zd0", "3244":"DkybcIaPjyE", "379":"HcgVqV5r2C8", "828":"XpuEQQv9w7k", "825":"n1oSyKkQAYM", "370":"YEiiqyxF8a0", "827":"h0riZCrRFYo", "826":"nm8LMKUxgbU", "821":"3NsSb9sqNC0", "820":"IrkgPq5cml4", "823":"XKtwgdwHMx0", "376":"6YumXIgz_0Y", "708":"gCaqdaYu4G8", "709":"n1YvkBtMsiU", "704":"nO7VN4YUpvI", "707":"QX7UeYMXtKg", "700":"BRxENyAAhps", "701":"tX5lBHeNL9o", "702":"qn4wReo9ypE", "393":"Wc2cDvQ7qrw", "392":"U9qXU1Oy_mU", "391":"hl6dgkOMhAY", "390":"O9-sHX6bKv8", "397":"B3PO73_Pnus", "394":"PIAdFDA4_gc", "83":"_RTzTJZMnU0", "398":"pyP5lRQkww4", "87":"ZZhxyqmJHNs", "85":"iC2oHpXb3zo", "797":"hI06gm8g93Q", "928":"IwfnHZpVVTg", "795":"0Kmf1GLsm0Y", "794":"qQ7w14IaIrQ", "793":"Np9nHvdj17A", "792":"UEf-qzvIhqY", "791":"6BopgiYAt_s", "415":"RkhtZA6xtwA", "799":"1wpEJMPniBM", "798":"g_N9BU5RLFY", "7":"oLrw9fjk_p8", "586":"_sjwxc7XSQE", "587":"bNTXmMQl1y8", "584":"4bOOVsoRgbs", "585":"OdN0VxWuW8E", "582":"JHtrHRsoN3M", "583":"Yx5GFdec9w4", "580":"KH7hYY8eyHg", "581":"87VW6DwUQwU", "588":"sb7ESd-l5qI", "589":"lTDO5U9jLis", "245":"574N6MjFxS8", "244":"C4adNHqddtM", "247":"dDXeCfIrzPA", "246":"Q4SuHYDmE2I", "241":"6jduqe5UksE", "243":"8sBr4OtDGh0", "242":"4BbspP7cU_Q", "248":"2LE6_jC0I28", "1436":"O8Jj_FZ-GOI", "1437":"OzHVwiMfy2g", "2578":"8V7tbnMjrZU", "2579":"nC9NQFovFVE", "2576":"DIOSyvASL3Y", "2577":"948oDuqelgQ", "2574":"o_2WTvWSqmQ", "2575":"TmtwhtpKInA", "2572":"1jGwyjRkC0k", "2573":"oJX6BJ3RWWM", "2570":"Ub_lHubLsTM", "2571":"q6lXil65AXI", "518":"cbmRM752Pow", "513":"F8x_a0dsIgg", "512":"tK6eh1jcJi0", "514":"H7uhHeby40U", "517":"Kj_CMD7wQkg", "516":"mgGsm3Cx2PE", "458":"gD5PGcw0bSM", "459":"BI1n0F5sSSc", "450":"0UCX1v2ucgE", "451":"lNBkfLQLgS0", "453":"sS-0lL5AoRw", "454":"Jd-0aS7JvbI", "455":"ieabyV_U1No", "456":"JKLP6JDy-c8", "457":"U_ZErJfhe8A", "178":"XQBFkhwXwhQ", "177":"d92pP29hEE8", "176":"ZZUd14er6WQ", "175":"esm2ZOWQxGk", "174":"pQkarLjPqwM", "172":"sJGjE3-Bavs", "171":"JMhKsUKOIHw", "170":"4AImKmfPXLY", "970":"FtXNPJy1niw", "309":"-l6Ejcvf2Ec", "182":"noDO6-JSMms", "657":"b7FelrIi32g", "180":"WTveWtHPS8o", "181":"HaUVQMrE_fg", "187":"siVPPWW6ZSY", "184":"-60uDsqAbOk", "185":"gQpvdMs-208", "189":"Pl5Yf3tdUyA", "658":"P9aiIDfdizI", "2622":"wRhfQU9gu8c", "2623":"x6Dn2qY-nCE", "2620":"yWEVlp1mzu0", "2621":"c6Uj06eRrJQ", "2626":"wJr9M0YGH8I", "2627":"U-O2N7YJhVc", "2624":"YG5b3hIBwYY", "2625":"e4T1_nAL8hM", "2628":"Zx_FR_GDtvg", "2629":"KnzoK5h6ufY", "3284":"pOLH9tBAEjI", "3283":"hBfRtv0RNto", "3282":"mKz7uDzGK20", "3281":"cqEq1xtIpBo", "869":"RX75QAYrgjc", "868":"ymAa3bhHnxA", "16":"TbnmHIwXlPU", "19":"KTm2wh-qfPo", "860":"VX4tXb1IKk0", "863":"A5QjSU12yVg", "862":"5jT7GYs0DRo", "865":"KGTUvSpGGFY", "864":"kOoeG8O3TGU", "867":"m1hYG3l9PQ0", "866":"woCGlOucKrU", "883":"BURr8B2XSCQ", "882":"fbMKAPm8Qic", "880":"N-7-Y6e3Q-k", "885":"-q4aUcDlD5U", "884":"xGMyXunKjUI", "3232":"-sdMyznfYXM", "3233":"9UeVkjr3P88", "3230":"uyFZbQNrKaU", "3231":"s_kV6uGHNrU", "3236":"52n3q4KNUN4", "3237":"hozXj1Uuneo", "3234":"pwRhVfDhol0", "3235":"O5zkqxewPOA", "3238":"ALeJ_l5cWUw", "3239":"ucRTEE7wWPI", "809":"9qh9rpkODG0", "322":"gdKTwmavh4M", "320":"sb3Dkeg-lwc", "321":"NeOryrLW_EY", "326":"NuFNgE9IKVo", "327":"tr6Vb8YMy8Y", "324":"nIjiZIp5400", "325":"DcxygN5_5Bw", "328":"9MYfnELI9sA", "329":"XQlhCgiHmCA", "775":"rxDgl-OCehg", "774":"r0YdT4Q5LH8", "777":"N_eIAS-HwA0", "776":"fwBruilv6Tk", "771":"T2oQn8zN-xk", "773":"IBYIY9FNTj8", "772":"2wjSNS4lJGA", "209":"KdBj2qMDfqQ", "208":"9ORb5VfcnI0", "779":"kAmhWyDjov0", "778":"8CbqgErMluQ", "77":"dtXGTLAbWAo", "76":"uk9y5pRsWrU", "75":"SgA-8A72AnA", "74":"9Ghm0zLel9c", "73":"ANYPf5zuXdc", "72":"f8IZw1Xxqkw", "71":"r31AN0aCdYQ", "2972":"dSyQRAm1rjw", "2973":"QBzmBMdRKg4", "2970":"BeB9K6JeV3k", "2971":"MKU-487rG3Y", "2976":"RhmQqP0pHY8", "2977":"F3BgzfwPzP4", "79":"rl0WnRclTp8", "78":"geL6sU0psLU", "2994":"56x9xrWp0AM", "805":"TClJ3fjjHIw", "50":"r1aB_ttmvoM", "669":"0DJhHWaVYIU", "668":"XjrvDCzVOJQ", "666":"lpNBCl-aYOA", "214":"ONG8cvTFbb0", "769":"lPfwHET4KrY", "692":"ZO0sKdcdpic", "691":"PpsSkV5y3Ws", "696":"CHh5tvqFAHU", "697":"mOWoTXxA6H4", "2488":"ayJTbexKX_U", "2489":"xQlk5YWGCks", "2486":"x8IEdzRnM2s", "2487":"jJ9Do6cIJ3w", "2484":"4pnSfP_DqN8", "699":"Yd8Xp0tduWo", "2482":"mQIbOWK3RgY", "2483":"kfBR1N_qKeM", "2480":"zglvPkAMR8E", "2481":"LukK6CYWnX8", "542":"wrjuv_1MvwY", "543":"1dp2w8v8QIo", "541":"QuBlk3WL29I", "8":"4uEqwfaosDw", "549":"efPWmGRRw0M", "217":"QblheXQB2xE", "120":"scOAHffkGPY", "121":"mOhQI3S_HCE", "123":"YSu0PywPPa4", "124":"MQMrKqbMMbE", "125":"vURQbP0dRcc", "126":"3SNdbD651_c", "127":"q0JEyBtGWpo", "128":"sXN_WGV-nCM", "129":"_S2ABFpjeZc", "414":"FFoEinGGAS8", "929":"40t2mFszUm0", "416":"xNs98hNPGnM", "417":"8x9Ww_daZGU", "411":"a4oI9UsBFvY", "412":"PwIoeAy7qaM", "413":"DE8xqkpa4ig", "920":"Xo54fcEiJms", "137":"tlqSUEOt88s", "922":"c49mIlEjR40", "923":"P6xx0p4_VgI", "924":"unlyXIkQOD4", "419":"Bkg2CE7xCVM", "926":"H6nIyHa8SFA", "319":"Rg9qHRDFRfw", "2604":"lIQKaCvZGv8", "311":"5L1hDEzS6tY", "310":"vEY-uhQXE2s", "316":"SjUCdsD_LwY", "315":"yEQedVWMhS4", "314":"dqc45OTMNcs", "3276":"NpSB3MTOiWY", "3277":"8VvQ9Lx-HDo", "3274":"lzJYIUaEkiw", "3275":"wSdGzp7EDcQ", "3273":"5KcNo2qA0iA", "3270":"YHQz9788v5k", "3271":"8sQU5shP8-E", "2962":"ltlxhu6htXc", "3278":"iYf1r9URTcQ", "138":"idKRWQzeVDk", "368":"g8kioUjcvqI", "369":"pKF1c7oAS8A", "366":"S40GLaDOXGY", "367":"0E7Wu7miJbw", "364":"AlkHIRuslvI", "365":"GudkfE5BDGU", "362":"5LSnCnnR-tc", "363":"hDOuE6_O1Nc", "360":"XvNX_oam1Jc", "361":"X0b4A2dIb30", "380":"XsbWOywVpLM", "381":"g3tt-1B_0uA", "382":"6sJczgpctlg", "383":"UVe2ZgS5Ftk", "384":"GLDDbA5S26k", "385":"0ESV8wcSw8A", "386":"t8KIvjEgJKg", "387":"1FWHPQFySuM", "389":"eC4sNZnfak0", "786":"2BH0O-IYsns", "787":"bcXz2NO9mnA", "780":"L9zwKEhaK1E", "781":"hSIsDZI0L6c", "788":"YK9FlWVcJXg", "789":"HLvlmFq5K3o", "151":"Pe9QQlkh_vU", "579":"QU_1Edk78g0", "578":"BujWQjvw7Zs", "576":"ERZJN2e5h_U", "575":"hcucipwd0QA", "574":"ZI46WxbECmY", "60":"iK3VNDR90OU", "3004":"Lv3ZyTv2V00", "62":"c71XJAO2C5Y", "259":"R128lYviL9w", "64":"GwJW3MapQ3A", "65":"MMALzCKyYww", "66":"WkKo6DCuvJo", "3002":"RmEoIwUYQzY", "252":"SA57j8KW9pc", "253":"DM07PiGNwd0", "250":"vZ4nRolhTPE", "256":"YtE-SHBLjsE", "257":"_SLNXhxst3k", "254":"DgWKjqosSjI", "255":"IK8-DLbjdqE", "2569":"Mft-s4_xHuo", "2568":"xgTkLZNmJEY", "157":"NzNiTX2ARNo", "2561":"fd6tdejwneQ", "2560":"2k0bXU__hBY", "2563":"bGgXkFjIb90", "2562":"8aU2wu25v_c", "2565":"6NXubY2WEfA", "405":"w6ugbms8ZXw", "2567":"f0y1VsnevWE", "2566":"v2o2I1jBmzo", "733":"PxOFj1fd-Q4", "734":"byvL_UViKYw", "737":"XZgu3d88uXw", "736":"Sjo0-3TbcVk", "739":"BrEaRK4nEA0", "505":"6oSgKeo9WCk", "500":"C-nSehocFg8", "2584":"kPDe7EV-O9w", "2583":"dUsy9HHHC8U", "2582":"7PDi-RwJmsE", "2581":"rFdpCR9Qg-U", "2580":"PhYel508RhQ", "465":"zTSUc_O9K1U", "464":"ReAo6Zkbsvg", "467":"ljpoiv75feM", "466":"J03Gsda0egI", "460":"PnjLRRi7iI4", "463":"WP3JiQ_kuek", "462":"G1oByJ7xArM", "168":"g8Peumq45do", "169":"i8AHuWhFA68", "164":"R9MjL91qArI", "165":"VE1BktNOwgo", "166":"EWOo-TUX-2U", "167":"mrRACleOJS0", "160":"9Hj_YFSuy14", "161":"mk-UXHgGxos", "162":"StMsYu4NIZ8", "163":"ysxOvt-rKNE", "408":"7pk0GO-yV4o", "2485":"miaCI8Zwts8", "2631":"ldaqFtLDYgM", "2630":"qkvqifOVHlc", "878":"9TkJXJ-f1ls", "879":"SQWf1b20FP0", "876":"xH86nVGN5WE", "877":"RPwurYP2na0", "874":"iyMLbGqa0kY", "875":"eIKF0T6kpnI", "872":"7Rk6qdWbg3w", "873":"SThXQ17qxH8", "870":"uEnNYYC7Grc", "871":"JgnbLvfjets", "753":"RkH3_j0Y2y8", "890":"owoU6PkvUiI", "891":"SfI39lcGHzA", "892":"kzCPOHmXKgc", "893":"HhlounWB3Jo", "894":"aUhixy3mqlw", "895":"bZ9aMPFUehc", "896":"Co3adKlbGQw", "897":"mtr26uedB30", "898":"pK6BwsyPq-8", "899":"GURgEd5Uokc", "3229":"XOI6ehtuRzY", "3228":"YPF2yTdMzYA", "3227":"1DqnlOu4kKk", "357":"nhXaJ0GXCvg", "356":"LCHDgEdPgKA", "355":"jfguC9ut8AQ", "354":"VoR34aWh4pA", "353":"blnw0F7kfuM", "352":"RB4Dgh04AtI", "351":"O-Lce0lgFMo", "350":"2AFmEafPvSI", "803":"P6WpknBLeTQ", "802":"Qg1u1HVZU7o", "801":"8WsWuakCEhE", "800":"JxQZ0_u4i-o", "807":"-6lBVn4hPCk", "359":"E_oY0V4xGH8", "2965":"C-VMu82oABQ", "2964":"bQ59Gj7jwaU", "768":"UYgU5q7SKpc", "2966":"85b7yqXpJAM", "212":"fDoqcp6D1wU", "210":"WJwE4I-3I7s", "211":"sYJKyWfNBpg", "762":"mFIz2u7cBC4", "763":"l-ObK2bbcZw", "760":"7w2qQ1l8PTo", "2969":"d5iyIYmJiXw", "2968":"LiaFZrW7YKU", "218":"cY2e4RofdNc", "219":"mk1vGKZtNgo", "2613":"B3gUiS-RTKY", "2612":"2CmZnYcjnrY", "289":"31VPV0By0PA", "288":"IkWyM0uUOjs", "281":"EfWDZhvyoow", "283":"u8RY-ZCGqF0", "282":"IUfosW6MnjY", "285":"bfriSBOrLPw", "284":"N_OaO7gM6dc", "287":"5Iw0B4asHpA", "286":"xwL74dtyS7o", "2499":"Y8uEJEXFJJc", "678":"CXAxRBo142Q", "2999":"Oc3m3SymTDY", "676":"jsbCwVQBxNY", "677":"tjatmd8xQgA", "670":"eQd6kFXXqYE", "672":"r86oT6N-Xh0", "673":"20U8sTBztP8", "263":"BTHZm0Bf7Hk", "261":"BxSeBg85r_M", "260":"Y29X11NctRk", "267":"wSESFXB_ftM", "2619":"8j97oXEKNJI", "264":"smc74ptyLIQ", "59":"F0XnuaGIVio", "269":"gDxUCMmCy_Y", "2618":"9-CCEpjGaDA", "58":"ViESzzy0RsY", "2998":"OFL5OigBJ-Y", "2551":"CtH3VC525dU", "2552":"sUpULk3Omo0", "2553":"McD-_sKl4ZY", "2554":"YKGshm94GqY", "2555":"zXGvpHNoFCI", "2556":"aT1RMFg_lzM", "2557":"v_LyPeE5oz0", "2491":"_S0U0K3pOqc", "2991":"miDLK6DmnGM", "2493":"NNb2uP_5z90", "2492":"BKHZ1OznVMQ", "2495":"mytdeR9ZubQ", "258":"zCEm7z5D5ZU", "2996":"ow9U2-qlEHE", "2997":"A0Mnj1xyVLs", "2558":"htEngmRTLsg", "63":"NdbgCh0Dkpk", "533":"EA4khViqj-s", "531":"4mIuq_YitwA", "2559":"x_3x38MgAZA", "61":"_3SUdW8-SY8", "3001":"xufOcn1UH5s", "57":"PEm_Yb6mWjo", "3000":"sq3yJavUrjU", "2477":"BVKusQWmhoI", "2476":"LPPCKLoSpi8", "2475":"eyzyw1kUeLg", "2993":"1USiOSASNf0", "2473":"cO-A-BVBIbI", "3003":"vbe4gVBWoqA", "2471":"VRrm3b1wzN0", "200":"SjyVAc_6zSM", "51":"N8kuQZapU8s", "203":"tTXPqZwHER0", "984":"z4nHhKQt3YY", "2494":"CmnTp4xmuEo", "114":"fHXGw-9o29s", "117":"h4PXKzc3Sx8", "116":"74BLrRJKCqY", "2497":"CcCVDKXYORY", "69":"El8RbPm7SGE", "205":"W50jt_Vbin0", "2496":"eO6c7S2DYBg", "119":"xy8AIQbEssw", "118":"M-t7HkCzy-s", "206":"pT2ESeJtpVc", "429":"BUyx6llAazA", "428":"8KTh2OA6Gyg", "919":"kRL1-C0OVOA", "420":"H3760EfFzKU", "423":"mnnRbVlQcho", "422":"YlaIah0YWXo", "425":"VjBdZYZN10c", "424":"4SEH0AiNUyU", "427":"zHHcnY0aZaI", "426":"W8SBRTY9GbQ", "308":"0IuVnKxzLqw", "2605":"P5hqOFQZbyc", "2606":"CN2r_GZlA9E", "2607":"VELBDUa9ZYg", "2600":"ESzXGIa19s0", "2601":"x-V1W-Ilz5M", "2602":"Z7_d52rvpcI", "2603":"MBn2vCZObTc", "300":"xpnLPKRCraI", "301":"5jH0rGqwoZI", "302":"xdUiDeKFwag", "303":"ji4DOElX0mE", "304":"oDHHUYBYPTk", "2609":"_5Od2rTtrpA", "306":"SerHr8YTxaQ", "371":"U8dIzftP_28", "3263":"Ziv3vZdyWf0", "3265":"DQl3wD-JAHY", "3264":"fNTEKkDBAUg", "3267":"H7-9TsLjAqU", "3266":"LsmEPd2ZRIc", "3269":"8_q6yylhthU", "3268":"x1OUgNmxkHQ", "373":"X9LjIzy_Qfw", "372":"Ph2ss2qcqus", "55":"lTNfQ-bLPPw", "375":"qRDP827uXow", "2978":"jnDwkgmbGvA", "374":"rkk5ytZyV6I", "2979":"WDq3VJfPQ-g", "377":"W22ZmBWUoPs", "2406":"Xl8OJnksHtc", "2490":"__KmGVO76-0", "52":"rZK2SgcmJnQ", "2564":"wRaWjKiqcF0", "2474":"-Ue6cwk4yc8", "2472":"07FsYSBxSt4", "2470":"sMIvvhzys7s", "2974":"65RW5jSQz90", "2975":"u6aICfJy7f0", "568":"H1dsHBqxgeM", "752":"jySxWX2uvPo", "751":"J-7ze4lXOCI", "757":"k4WMzHDhaWw", "756":"ILhHhOmPsJk", "755":"uZqfgSsW5rw", "754":"fBddznUH3y0", "759":"KuGZ2iaWXh0", "758":"jpJcOi378j8", "2479":"44LK66-l_JA", "229":"iTZzXbx1osA", "228":"e4RveNWgWZU", "227":"dqgatxddvL0", "226":"OIk7rxQH-Mc", "225":"TFmV0516XPQ", "224":"VqCMu4oT3OE", "223":"8L2jXvozXos", "222":"kKZ1kDgd1VQ", "221":"vAsnPtCklog", "2608":"yD_ycD1xCdA", "2990":"5JtYjuYrQzw", "726":"hKSr9qgnv_Y", "727":"AOSgGA6tvSU", "724":"ZLDggLUDCDc", "725":"rCLlHWmlGaM", "722":"JVC6X3c94Fk", "723":"hOFcIGaIWF4", "720":"vvs3N7RGgYg", "54":"vyYui4joqJM", "728":"NRyPy7DbJ58", "605":"F14Sg9lO6BI", "150":"TJmtb0dh1uw", "607":"7j7tOabSwbw", "152":"9A3C0W7cu2A", "601":"LISAKY0NeDU", "600":"KF1dgGYANXs", "603":"1Y-DIBkSFsk", "602":"TGrsOp4cIcM", "159":"_A5qb_eMYAo", "2498":"dNOpDztWDl8", "608":"YOHa6fGakhc", "81":"w_l0muZGyr4", "2992":"oH9kFUBKsUU", "48":"4zM9gBsbKUY", "951":"Q9NQSXDMnJU", "950":"rQis_aCm3tA", "954":"zApQwWWpLN4", "957":"sPemMZQKCKA", "956":"W8Y0GhvjaD0", "2478":"PcIjK-qOjvE", "2502":"XXF564lZjGM", "2501":"HFa6i_K15tY", "2500":"Tu_FK5u3TKo", "796":"rsR_B7rgyPE", "483":"ZPc4C5FgzpI", "509":"LIvxe8aQZuU", "473":"GQaMRWx1K-k", "476":"mJ306UC-RV4", "474":"8JCb1wjEbbs", "1864":"7-RlZrZZ_NA"}
+
+window.onload = poczatek;
+
+
