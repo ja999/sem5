@@ -82,7 +82,7 @@ def gradient_hsv_unknown(v):
 
 def gradient_hsv_custom(v):
     #return colorsys.hsv_to_rgb(math.sin(v), math.cos(v), max(0, min(1, math.cos(v) + math.sin(v) - abs(v - 0.5) + 0.2)))
-    return colorsys.hsv_to_rgb(abs(math.sin(3 * v) + 0.3), abs(math.cos(1.57 * v)), 0.3 + 0.7 * math.sin(v * 1.57))
+    return colorsys.hsv_to_rgb(0, abs(math.cos(3.14 * v)), 0.3 + 0.6 * math.sin(v * 3.1024))
 
 
 if __name__ == '__main__':
