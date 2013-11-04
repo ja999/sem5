@@ -15,7 +15,7 @@ from skimage.filter.rank import autolevel
 
 def main():
   original = data.imread('samolot03.jpg')
-  ima = data.imread('samolot03.jpg', as_grey = True)
+  ima = data.imread('samolot04.jpg', as_grey = True)
   im = ima**6
   thresh = filter.threshold_otsu(ima)
   binary = (ima > thresh)
