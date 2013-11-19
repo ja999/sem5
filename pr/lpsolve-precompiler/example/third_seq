@@ -1,0 +1,46 @@
+V1 = 1000
+V2 = 10000
+
+C1 = 2
+C2 = 1
+C3 = 1
+
+A1 = 1
+A2 = 12
+A3 = 1
+A4 = 2
+
+
+M = 10000000
+
+------
+
+
+min: T;
+T > T1;
+T > T2;
+T > T3;
+T > T4;
+
+V1 > d1 + d12;
+V2 > d21 + d23 + d24;
+
+Tzk2 = C2 * d23 + Trk2;
+Trk2 > C3 * d24 + -M * x34;
+Tzk3 = C3 * d24  + Trk3;
+Trk3 > C2 * d23 + M * x34 + -M;
+
+Tz1o1 = A1 * d1;
+
+Trk1 > Tz1o1;
+Trk1 > Tzk2
+Trk1 > Tzk3
+
+Tzk1 = Trk1 + C1 * d12 + C1 * d21;
+
+T1 > Tzk1 + A1 * V1 + -A1 * d12 + A1 * d21 + -A1 * d1;
+T2 > Tzk1 + A2 * V2 + A2 * d12 + -A2 * d21 + -A2 * d23 + -A2 * d24;
+T3 > Tzk2 + A3 * d23;
+T4 > Tzk3 + A4 * d24;
+
+int x34, d1, d12, d21, d23, d24;
