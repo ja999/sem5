@@ -1,20 +1,20 @@
 
-Value of objective function: 20668.00000000
+Value of objective function: 14400.00000000
 
 Actual values of the variables:
-T                           20668
-T1                          20668
-T2                          20668
-T3                          20668
-T4                          20668
-d12                          4667
+T                           14400
+T1                          14400
+T2                          14400
+T3                          14400
+T4                          14400
+d12                             0
 d21                             0
-d23                          1000
-d24                             0
-Tzk1                         4667
-Trk2                         6667
+d23                          7200
+d24                          2400
+Tzk1                            0
+Trk2                            0
+Tzk3                         9600
 x34                             1
-Trk3                         4667
-Tzk2                        11334
-Tzk3                        11334
-Tzk                         11334
+Trk3                         7200
+Tzk2                         7200
+Tzk                          9600

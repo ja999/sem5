@@ -1,0 +1,99 @@
+V1 = 1000
+V2 = 3500
+
+C1 = 5
+C2 = 4
+C3 = 3
+
+A1 = 14
+A2 = 6
+A3 = 1
+A4 = 2
+
+M = 10000000
+
+-----
+
+
+
+
+############################
+### First Model
+
+
+Value of objective function: 12934.00000000
+
+Actual values of the variables:
+T                           12934
+T1                          12934
+T2                          12934
+T3                          12934
+T4                          12934
+d12                           119
+d21                             0
+d23                           987
+d24                          2467
+Tzk1                          595
+Trk2                         7996
+Tzk3                         7996
+x34                             0
+Trk3                          595
+Tzk2                        11944
+Tzk                         11944
+
+
+
+############################
+### Second Model
+
+
+Value of objective function: 12866.00000000
+
+Actual values of the variables:
+T                           12866
+T1                          12866
+T2                          12866
+T3                          12866
+T4                          12866
+d1                            551
+d12                           126
+d21                             0
+d23                           904
+d24                          2571
+x34                             0
+Tzk2                        11960
+Trk2                         8344
+Tzk1                         8344
+Tzk3                         7714
+Trk3                            1
+Tz1o1                        7714
+Trk1                         7714
+Tzk                         11960
+
+
+
+############################
+### Third Model
+
+
+Value of objective function: 12848.00000000
+
+Actual values of the variables:
+T                           12848
+T1                          12848
+T2                          12848
+T3                          12848
+T4                          12848
+d1                            817
+d12                           128
+d21                             0
+d23                           931
+d24                          2569
+Tzk2                        11438
+Trk2                         7714
+Tzk3                         7710
+x34                             0
+Trk3                            3
+Tz1o1                       11438
+Trk1                        11438
+Tzk1                        12078

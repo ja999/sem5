@@ -8,15 +8,15 @@ V1 > d1 + d12;
 V2 > d21 + d23 + d24;
 
 Tzk2 = C2 * d23 + Trk2;
-Trk2 > C3 * d24 + -M * x34;
+Trk2 > Tzk3 + -M * x34;
 Tzk3 = C3 * d24  + Trk3;
-Trk3 > C2 * d23 + M * x34 + -M;
+Trk3 > Tzk2 + -M + M * x34;
 
 Tz1o1 = A1 * d1;
 
 Trk1 > Tz1o1;
-Trk1 > Tzk2
-Trk1 > Tzk3
+Trk1 > Tzk2;
+Trk1 > Tzk3;
 
 Tzk1 = Trk1 + C1 * d12 + C1 * d21;
 
