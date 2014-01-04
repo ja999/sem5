@@ -27,6 +27,8 @@ signal = []
 for i in t:
   signal.append(array[floor(size*i)])
 
+print array.__class__
+
 subplot(211)
 print signal[0]
 var = linspace(0, array.size, n, endpoint=False)
