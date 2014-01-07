@@ -1,0 +1,46 @@
+serial
+  Wartosc liczby PI wynosi  3.141592653590
+  Czas przetwarzania wynosi 10891.930000 sekund
+par
+  Wartosc liczby PI wynosi  1.194490420017
+  Czas przetwarzania wynosi 61092.478000 sekund
+par atomic
+par reduction
+  Wartosc liczby PI wynosi  3.150201957368
+  Czas przetwarzania wynosi 34558.658000 sekund
+par private reduction
+  Wartosc liczby PI wynosi  3.141592653590
+  Czas przetwarzania wynosi 12920.508000 sekund
+par false sharing
+
+
+serial
+  Wartosc liczby PI wynosi  3.141592653590
+
+  real  0m12.304s
+  real  0m12.237s
+  real  0m11.423s
+  real  0m13.080s
+  real  0m12.028s
+
+par
+  real  0m15.014s
+  real  0m14.910s
+  real  0m16.924s
+  real  0m15.609s
+  real  0m16.831s
+
+par atomic
+  real  9m14.231s
+
+par reduction
+  real  0m8.630s
+  real  0m8.570s
+  real  0m8.626s
+  real  0m8.680s
+  real  0m8.609s
+
+par private reduction
+
+par false sharing
+

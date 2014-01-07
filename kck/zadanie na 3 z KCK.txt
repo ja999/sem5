@@ -1,0 +1,10 @@
+zadanie na 3 z KCK:
+- skalowalne okienko,
+- inny kolor paska dla każdego pixela pionowego,
+- nie używać floatów,
+- gradient ma być też skalowany -> zależnie od rozmiaru okna będzie więcej/mniej pasków z kolorami,
+-
+
+zadanie na 5:
+- model mapy (DigitalElevationModel),
+- dodawać odejmować jasność - niby bardziej 3d
