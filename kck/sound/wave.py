@@ -35,20 +35,12 @@ Tstart = start * T
 print 'time taken into account from file start:'
 print T
 
-n = (Tend - Tstart) * w        # liczba próbek
-t = linspace(Tstart, Tend, n, endpoint=False) # punkty na osi OX [s]
+n = (Tend - Tstart) * w
+t = linspace(Tstart, Tend, n, endpoint=False)
 
-# f = lambda t : sin(100*2*pi*t)    # def. funkcji
-# print f(t)
-# signal = f(t)                 # funkcja spróbkowana
-
-
-# print array[floor(size*0.34)]
 print 'time  points for X: '
 print t
 
-# # f = lambda t : array[floor(size*t)] # def. funkcji
-# # signal = f(t) # funkcja spróbkowana
 print 'cutting parts from signal...'
 signal = []
 for i in range(int(start*size), int(cut*size)):
@@ -56,13 +48,10 @@ for i in range(int(start*size), int(cut*size)):
 print 'fragmented!'
 
 subplot(211)
-# print signal[0]
-# var = linspace(0, array.size, n, endpoint=False)
-# plot(var, signal, '*')
 print 'skipping first subplot...'
 
 signal1 = fft(signal)
-signal1 = abs(signal1)        # moduł
+signal1 = abs(signal1)
 print 'calculated fft!'
 
 print 'cutting fft...'
