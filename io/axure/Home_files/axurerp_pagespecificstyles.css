@@ -1,0 +1,278 @@
+﻿body {
+    margin: 0px;
+}
+
+div {
+    background-repeat: no-repeat;
+}
+
+.raw_image {
+    width: 100%;
+    height: 100%;
+}
+
+.preload {
+    display: none;
+}
+#main_container {
+}
+
+.form_sketch {
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.u0_normal {
+    background-image: url('../Header_files/u0_normal.png');
+}
+
+.u0_container {
+    position:absolute;
+    left:10px;
+    top:10px;
+    width:1100px;
+    height:119px;
+}
+
+#u0_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:1106px;
+    height:125px;
+}
+
+.u1 {
+    position:absolute;
+    left:2px;
+    top:52px;
+    width:1096px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u2 {
+    position:absolute;
+    left:220px;
+    top:41px;
+    width:800px;
+    height:55px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u3_container {
+    position:absolute;
+    left:40px;
+    top:21px;
+    width:131px;
+    height:96px;
+}
+
+#u3_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:131px;
+    height:96px;
+}
+
+.u4 {
+    position:absolute;
+    left:2px;
+    top:40px;
+    width:127px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u6_normal {
+    background-image: url('../Navigation_files/u6_normal.png');
+}
+
+.u6_container {
+    position:absolute;
+    left:10px;
+    top:140px;
+    width:170px;
+    height:400px;
+}
+
+#u6_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:176px;
+    height:406px;
+}
+
+.u7 {
+    position:absolute;
+    left:2px;
+    top:192px;
+    width:166px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u8_mouseOver {
+    background-image: url('../Navigation_files/HomeButton_u8_mouseOver.png');
+}
+
+.u8_normal {
+    background-image: url('../Navigation_files/HomeButton_u8_normal.png');
+}
+
+.u8_container {
+    position:absolute;
+    left:30px;
+    top:165px;
+    width:130px;
+    height:35px;
+}
+
+#u8_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:136px;
+    height:41px;
+}
+
+.u9 {
+    position:absolute;
+    left:2px;
+    top:10px;
+    width:126px;
+    height:15px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u10_mouseOver {
+    background-image: url('../Navigation_files/HomeButton_u8_mouseOver.png');
+}
+
+.u10_normal {
+    background-image: url('../Navigation_files/HomeButton_u8_normal.png');
+}
+
+.u10_container {
+    position:absolute;
+    left:30px;
+    top:225px;
+    width:130px;
+    height:35px;
+}
+
+#u10_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:136px;
+    height:41px;
+}
+
+.u11 {
+    position:absolute;
+    left:2px;
+    top:10px;
+    width:126px;
+    height:15px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u12_mouseOver {
+    background-image: url('../Navigation_files/HomeButton_u8_mouseOver.png');
+}
+
+.u12_normal {
+    background-image: url('../Navigation_files/HomeButton_u8_normal.png');
+}
+
+.u12_container {
+    position:absolute;
+    left:30px;
+    top:285px;
+    width:130px;
+    height:35px;
+}
+
+#u12_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:136px;
+    height:41px;
+}
+
+.u13 {
+    position:absolute;
+    left:2px;
+    top:10px;
+    width:126px;
+    height:15px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u14 {
+    position:absolute;
+    left:30px;
+    top:505px;
+    width:130px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u15 {
+    position:absolute;
+    left:30px;
+    top:482px;
+    width:130px;
+    height:15px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
