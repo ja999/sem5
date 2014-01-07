@@ -40,7 +40,7 @@ t = linspace(0, T, n, endpoint=False) # punkty na osi OX [s]
 
 
 # print array[floor(size*0.34)]
-print 'time points for X: '
+print 'time  points for X: '
 print t
 
 # # f = lambda t : array[floor(size*t)] # def. funkcji
