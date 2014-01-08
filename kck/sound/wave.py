@@ -8,10 +8,11 @@ import math
 import sys
 import scipy.io.wavfile
 
+logging = True
+plotting = True
+
 def nearest_two(x):
   return math.pow(2, math.ceil(math.log(x) / math.log(2)))
-
-logging = True
 
 def print_this(*arg):
   if logging:
@@ -21,7 +22,6 @@ def print_this(*arg):
     print to_print
 
 print_this('reading file...')
-# w, array2 = scipy.io.wavfile.read('1khz.wav')
 w, array2 = scipy.io.wavfile.read(str(sys.argv[1]))
 print_this('read!')
 
@@ -109,17 +109,21 @@ else:
 
 status = int(res in sys.argv[1])
 print_this(status, res, sys.argv[1])
-exit(status)
+if not plotting:
+  exit(status)
 
-# plotting...
-# subplot(212)
-# signal1[0] = 0
-print_this('downsampling for plot...')
-# a = linspace(0, w / 2, n / (2 * plot_factor), False, False)
-# signal_to_plot = signal_cut[0::plot_factor]
-# signal_to_plot = signal_to_plot[:a.size]
-print_this('plotting...')
-# stem(a, signal_to_plot, '-*')
-print_this('plotted! :)')
+if plotting:
+  subplot(211)
+  plot(array)
 
-# show()
+  subplot(212)
+  signal1[0] = 0
+  print_this('downsampling for plot...')
+  a = linspace(0, w / 2, n / (2 * plot_factor), False, False)
+  signal_to_plot = signal_cut[0::plot_factor]
+  signal_to_plot = signal_to_plot[:a.size]
+  print_this('plotting...')
+  stem(a, signal_to_plot, '-*')
+  print_this('plotted! :)')
+
+  show()
