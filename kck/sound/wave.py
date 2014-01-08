@@ -21,6 +21,14 @@ def print_this(*arg):
       to_print += str(i) + ' '
     print to_print
 
+def unfiltered_precessing(signal):
+  amps_array_male = np.array([s[1] for s in signal if s[0] > 80 and s[0] < 140 ])
+  amps_array_female = np.array([s[1] for s in signal if s[0] > 170 and s[0] < 260 ])
+  if np.amax(amps_array_male) < np.amax(amps_array_female):
+    return True
+  else:
+    return False
+
 print_this('reading file...')
 w, array2 = scipy.io.wavfile.read(str(sys.argv[1]))
 print_this('read!')
@@ -39,8 +47,8 @@ cut = 1
 start = 0
 size = array.size
 plot_factor = 100
-low_freq_ign = 60
-hi_freq_ign = 10000
+low_freq_ign = 80
+hi_freq_ign = 8000
 thresh_factor = 0.15
 
 T = size / w
@@ -74,9 +82,6 @@ Tstart *= scale
 
 print_this('fragmented!')
 
-subplot(211)
-print_this('skipping first subplot...')
-
 signal1 = fft(signal)
 signal1 = abs(signal1)
 print_this('calculated fft!')
@@ -97,18 +102,30 @@ print_this(max_amp_freq)
 thresh = max_amp * thresh_factor
 
 signal_filtered = np.array([ind / (Tend - Tstart) for ind, s in enumerate(signal_cut) if s > thresh])
+signal_unfiltered = np.array([[ind / (Tend - Tstart), s] for ind, s in enumerate(signal_cut) if s > thresh])
 
-print_this('filtered sgnal aray:')
+print_this('filtered signal aray:')
 print_this(signal_filtered)
 print_this(signal_filtered.size)
+
+print_this('unfiltered signal array:')
+print_this(signal_unfiltered[0])
+print_this(signal_unfiltered[1])
+print_this(signal_unfiltered.size)
+
+print_this('first known frequency:')
+print_this(signal_filtered[0])
 
 if signal_filtered[0] > 180:
   res = 'K'
 else:
-  res = 'M'
+  if unfiltered_precessing(signal_unfiltered):
+    res = 'K'
+  else:
+    res = 'M'
 
 status = int(res in sys.argv[1])
-print_this(status, res, sys.argv[1])
+print status, res, sys.argv[1]
 if not plotting:
   exit(status)
 
