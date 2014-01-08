@@ -21,10 +21,12 @@ def print_this(*arg):
       to_print += str(i) + ' '
     print to_print
 
-def unfiltered_precessing(signal):
-  amps_array_male = np.array([s[1] for s in signal if s[0] > 80 and s[0] < 140 ])
-  amps_array_female = np.array([s[1] for s in signal if s[0] > 170 and s[0] < 260 ])
-  if np.amax(amps_array_male) < np.amax(amps_array_female):
+def unfiltered_precessing(signal, sensitivity):
+  amps_array_male = np.array([s[1] for s in signal if s[0] > 80 and s[0] < 150 ])
+  amps_array_female = np.array([s[1] for s in signal if s[0] > 170 and s[0] < 220 ])
+  print_this('certainty coefficient:')
+  print_this(np.amax(amps_array_male) / np.amax(amps_array_female))
+  if (np.amax(amps_array_male) / np.amax(amps_array_female)) < sensitivity:
     return True
   else:
     return False
@@ -119,7 +121,7 @@ print_this(signal_filtered[0])
 if signal_filtered[0] > 180:
   res = 'K'
 else:
-  if unfiltered_precessing(signal_unfiltered):
+  if unfiltered_precessing(signal_unfiltered, 0.9):
     res = 'K'
   else:
     res = 'M'
