@@ -8,8 +8,8 @@ import math
 import sys
 import scipy.io.wavfile
 
-logging = True
-plotting = True
+logging = False
+plotting = False
 
 def nearest_two(x):
   return math.pow(2, math.ceil(math.log(x) / math.log(2)))
