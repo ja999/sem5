@@ -15,7 +15,10 @@ logging = True
 
 def print_this(*arg):
   if logging:
-    print arg
+    to_print = ''
+    for i in arg:
+      to_print += str(i) + ' '
+    print to_print
 
 print_this('reading file...')
 # w, array2 = scipy.io.wavfile.read('1khz.wav')
