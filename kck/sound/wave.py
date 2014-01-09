@@ -22,14 +22,16 @@ def print_this(*arg):
     print to_print
 
 def unfiltered_precessing(signal, sensitivity):
-  amps_array_male = np.array([s[1] for s in signal if s[0] > 80 and s[0] < 150 ])
+  amps_array_male = np.array([s[1] for s in signal if s[0] > 80 and s[0] < 160 ])
   amps_array_female = np.array([s[1] for s in signal if s[0] > 170 and s[0] < 220 ])
-  print_this('certainty coefficient:')
-  print_this(np.amax(amps_array_male) / np.amax(amps_array_female))
-  if (np.amax(amps_array_male) / np.amax(amps_array_female)) < sensitivity:
-    return True
-  else:
-    return False
+  if amps_array_female.size > 0 and amps_array_male.size > 0:
+    print_this('certainty coefficient:')
+    print_this(np.amax(amps_array_male) / np.amax(amps_array_female))
+    if (np.amax(amps_array_male) / np.amax(amps_array_female)) < sensitivity:
+      return True
+    else:
+      return False
+  return False
 
 print_this('reading file...')
 w, array2 = scipy.io.wavfile.read(str(sys.argv[1]))
@@ -89,12 +91,15 @@ signal1 = abs(signal1)
 print_this('calculated fft!')
 
 print_this('cutting fft...')
-print_this(floor(float(signal1.size) / float(2.0)))
 if signal1.size / 2 == n / 2:
   signal_cut = signal1[:(signal1.size / 2)]
 else:
   signal_cut = signal1[:(signal1.size / 2) - 1]
-signal_cut = np.concatenate((np.zeros(low_freq_ign * (Tend - Tstart)), signal_cut[(low_freq_ign * (Tend - Tstart)):(hi_freq_ign * (Tend - Tstart))], np.zeros(signal_cut.size - (hi_freq_ign * (Tend - Tstart))+1)), axis = 0)
+# Tend = Tend / 2
+if signal_cut.size - (hi_freq_ign * (Tend - Tstart)) + 1 > 0:
+  signal_cut = np.concatenate((np.zeros(low_freq_ign * (Tend - Tstart)), signal_cut[(low_freq_ign * (Tend - Tstart)):(hi_freq_ign * (Tend - Tstart))], np.zeros(signal_cut.size - (hi_freq_ign * (Tend - Tstart)) + 1)), axis = 0)
+else:
+  signal_cut = np.concatenate((np.zeros(low_freq_ign * (Tend - Tstart)), signal_cut[(low_freq_ign * (Tend - Tstart)):(hi_freq_ign * (Tend - Tstart))], np.zeros(signal_cut.size - ((hi_freq_ign * (Tend - Tstart)) / 2) + 1)), axis = 0)
 max_amp = np.amax(signal_cut)
 max_amp_freq = np.argmax(signal_cut) / (Tend - Tstart)
 
@@ -126,7 +131,7 @@ else:
   else:
     res = 'M'
 
-status = int(res in sys.argv[1])
+status = int(res in sys.argv[1]) + 2
 print status, res, sys.argv[1]
 if not plotting:
   exit(status)

@@ -1,13 +1,17 @@
 #!/usr/bin/env ruby
+require 'peach'
 
 def fire_all
   files = Dir.entries('train').select { |e| e =~ /wav/ }
   percentage = 0
-  files.each do |f|
+  files.peach(4) do |f|
     file = "train/#{f}"
-    output = %x(python wave.py #{file})
+    output = %x(python -W ignore wave.py #{file})
     result = $?.exitstatus
-    percentage += result
+    # percentage += result - 2
+    if result >= 2
+      percentage += result - 2
+    end
     puts "#{result} #{file}"
     # puts output
   end
