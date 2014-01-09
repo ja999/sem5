@@ -95,7 +95,6 @@ if signal1.size / 2 == n / 2:
   signal_cut = signal1[:(signal1.size / 2)]
 else:
   signal_cut = signal1[:(signal1.size / 2) - 1]
-# Tend = Tend / 2
 if signal_cut.size - (hi_freq_ign * (Tend - Tstart)) + 1 > 0:
   signal_cut = np.concatenate((np.zeros(low_freq_ign * (Tend - Tstart)), signal_cut[(low_freq_ign * (Tend - Tstart)):(hi_freq_ign * (Tend - Tstart))], np.zeros(signal_cut.size - (hi_freq_ign * (Tend - Tstart)) + 1)), axis = 0)
 else:
@@ -123,7 +122,7 @@ print_this(signal_unfiltered.size)
 print_this('first known frequency:')
 print_this(signal_filtered[0])
 
-if signal_filtered[0] > 180:
+if signal_filtered[0] > 160:
   res = 'K'
 else:
   if unfiltered_precessing(signal_unfiltered, 0.9):
